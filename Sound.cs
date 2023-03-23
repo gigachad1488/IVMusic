@@ -12,7 +12,19 @@ namespace IVMusic
         Mp3FileReader reader;
         WaveOut wave;
 
-        public Sound(string path = "3")
+        public float Volume
+        {
+            get
+            {
+                return wave.Volume;
+            }
+            set
+            {
+                wave.Volume = (float)value;
+            }
+        }
+
+        public Sound(string path)
         {
             InitSound(path);
         }
@@ -36,11 +48,6 @@ namespace IVMusic
         {
             if (wave != null && wave.PlaybackState == PlaybackState.Playing)
                 wave.Stop();
-        }
-
-        public void ChangeVolume(int vol)
-        {
-            wave.Volume = vol;
         }
     }
 }

@@ -61,7 +61,7 @@
                     <SolidColorBrush Color="#FF14252B" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Slider x:Name="volumeslider" HorizontalAlignment="Left" Margin="1036,28,0,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged"/>
+            <Slider x:Name="volumeslider" HorizontalAlignment="Left" Margin="1036,28,0,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged" Maximum="1" TickFrequency="0.005" SmallChange="0.005"/>
             <Slider HorizontalAlignment="Left" Margin="35,21,0,0" VerticalAlignment="Top" Width="740" Height="36"/>
             <TextBox HorizontalAlignment="Left" Margin="35,61,0,34" TextWrapping="Wrap" Text="TextBox" Background= "#FF984343"  Width="730" Height="27" Foreground="White">
                 <TextBox.BorderBrush>
@@ -69,9 +69,10 @@
                 </TextBox.BorderBrush>
             </TextBox>
             <Label Content="Label" HorizontalAlignment="Left" Margin="780,19,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="l6" Content="Label" HorizontalAlignment="Left" Margin="594,0,0,0" VerticalAlignment="Center"/>
         </Grid>
         <Grid x:Name="mainwrappanel" Margin="279,0,0,0" VerticalAlignment="Top" Height="463">
-            <MediaElement Source="D:\users\student\Downloads\a4.avi" Stretch="Fill">
+            <MediaElement Source="C:\Users\iluha\Downloads\a4.avi" Stretch="Fill">
 
             </MediaElement>
             <TextBox x:Name="searchtextbox" HorizontalAlignment="Left" Margin="22,10,0,0" TextWrapping="Wrap" Text="Поиск" VerticalAlignment="Top" Width="146" Height="36" Background="#FFCE9393"/>
