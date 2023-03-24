@@ -9,8 +9,21 @@ namespace IVMusic
 {
     class Sound
     {
+        public string Name { get; set; }
+        private string Path { get; set; }
+
         Mp3FileReader reader;
         WaveOut wave;
+
+        public Sound()
+        {
+
+        }
+        public Sound(string path)
+        {
+            Path = path;
+            Name = path.Substring(path.LastIndexOf('\\') + 1, path.Length - path.LastIndexOf('\\') - 4);
+        }
 
         public float Volume
         {
@@ -24,10 +37,22 @@ namespace IVMusic
             }
         }
 
-        public Sound(string path)
+        public bool IsInit
         {
-            InitSound(path);
+            get
+            {
+                if (reader == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
         }
+
+        
 
         private void InitSound(string path)
         {
@@ -40,6 +65,7 @@ namespace IVMusic
         {
             if (wave != null && wave.PlaybackState == PlaybackState.Stopped)
             {
+                InitSound(Path);
                 wave.Play();
             }
         }

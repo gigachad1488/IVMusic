@@ -10,9 +10,17 @@ namespace IVMusic
     {
         private static List<PlayList> playlists = new List<PlayList>();
 
-        public static List<Sound> GetPlayList(int i)
+        public static int Count
         {
-            return playlists[i].GetPlayList();
+            get
+            {
+                return playlists.Count;
+            }
+        }
+
+        public static PlayList GetPlayList(int i)
+        {
+            return playlists[i];
         }
 
         public static void AddPlayList(PlayList playlist) 

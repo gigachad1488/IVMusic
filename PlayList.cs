@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Media;
 
 namespace IVMusic
 {
@@ -13,19 +14,31 @@ namespace IVMusic
         public Image image;
         public string Title { get; set; }
 
+        public int Count
+        {
+            get
+            {
+                return sounds.Count;
+            }
+        }
+
         public PlayList()
         {
 
         }
 
-        public List<Sound> GetPlayList()
+        public PlayList(Image image)
         {
-            return this.sounds;
+            this.image = image;
         }
-
         public void AddSound(Sound sound)
         {
             sounds.Add(sound);
+        }
+
+        public Sound GetSound(int i)
+        {
+            return sounds[i];
         }
 
         public void PlayRandomSong()

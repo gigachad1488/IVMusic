@@ -24,14 +24,12 @@ namespace IVMusic
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-
-        Brush standartcolor;
-        Sound cursound;
+        Sound cursound = new Sound();
+        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
-            standartcolor = stopbutton.Background;
+
         }
 
         private void ButtonColorChangeEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -54,10 +52,13 @@ namespace IVMusic
         {
             string text = stopbutton.Content.ToString();
             stopbutton.Content = text == "▶" ? "🛑" : "▶";
-            if (text == "▶")
-                cursound.Stop();
-            else
-                cursound.Play();
+            if (cursound.IsInit && cursound != null)
+            {
+                if (text == "▶")
+                    cursound.Stop();
+                else
+                    cursound.Play();
+            }
         }
 
         private void browsebutton_Click(object sender, RoutedEventArgs e)
@@ -70,23 +71,74 @@ namespace IVMusic
             {
                 playlist.Title = new DirectoryInfo(dialog.SelectedPath).Name;
                 filepaths = Directory.GetFiles(dialog.SelectedPath, "*.mp3").ToList();
+                Image im = new Image();
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                string[] impath = Directory.GetFiles(dialog.SelectedPath, "*.png");
+                System.Windows.MessageBox.Show(impath[0]);
+                image.UriSource = new Uri(impath[0], UriKind.Absolute);
+                image.EndInit();
+                playlist.image = im;
                 foreach (var i in filepaths)
                 { 
-                    System.Windows.MessageBox.Show(i);
                     playlist.AddSound(new Sound(i));
                 }
             }
+            else
+            {
+                return;
+            }
             AllPlayLists.AddPlayList(playlist);
-            cursound = playlist.sounds[0];
-            cursound.Play();
-            volumeslider.Value = cursound.Volume;
-            stopbutton.Content = "▶";
+            cursound = playlist.GetSound(0);
+            ResetPlayLists();
+        }
+
+        public void ResetPlayLists()
+        {
+            playlistslistbox.Items.Clear();
+            for (int i = 0; i < AllPlayLists.Count; i++)
+            {
+                PlayList list = AllPlayLists.GetPlayList(i);
+                playlistslistbox.Items.Add(list.Title);
+            }
         }
 
         private void volumeslider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (cursound.IsInit && cursound != null)
+                cursound.Volume = (float)volumeslider.Value;
 
-            cursound.Volume = (float)volumeslider.Value;
+        }
+
+        private void UploadPlayList(int i)
+        {
+            listview.Items.Clear();
+            PlayList list = AllPlayLists.GetPlayList(i);
+            playlistnametextbox.Text = list.Title;
+            picturepanel.Source = list.image;
+            for (int j = 0; j < list.Count; j++)
+            {
+                Sound sound = list.GetSound(j);
+                listview.Items.Add(new MyItem {dur = 50, name = sound.Name});
+            }
+            
+            
+        }
+        private void playlistslistbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            UploadPlayList(playlistslistbox.SelectedIndex);
+        }
+
+        private void h_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.MessageBox.Show("робит");
         }
     }
+}
+
+public class MyItem
+{   
+    public string name { get; set; }
+
+    public int dur { get; set; }
 }
