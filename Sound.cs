@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using NAudio.Wave;
 
 namespace IVMusic
@@ -11,6 +12,20 @@ namespace IVMusic
     {
         public string Name { get; set; }
         private string Path { get; set; }
+
+        public TimeSpan Duration { get; set; }
+
+        public TimeSpan Time
+        {
+            get
+            {
+                return reader.CurrentTime;
+            }
+            set
+            {
+                reader.CurrentTime = value;
+            }
+        }
 
         Mp3FileReader reader;
         WaveOut wave;
@@ -21,8 +36,16 @@ namespace IVMusic
         }
         public Sound(string path)
         {
+            SaveSound(path);
+        }
+
+        public void SaveSound(string path)
+        {
             Path = path;
-            Name = path.Substring(path.LastIndexOf('\\') + 1, path.Length - path.LastIndexOf('\\') - 4);
+            Name = path.Substring(path.LastIndexOf('\\') + 1, path.Length - path.LastIndexOf('\\') - 5);
+            reader = new Mp3FileReader(path);
+            Duration = reader.TotalTime;
+
         }
 
         public float Volume
@@ -37,11 +60,12 @@ namespace IVMusic
             }
         }
 
+
         public bool IsInit
         {
             get
             {
-                if (reader == null)
+                if (wave == null)
                 {
                     return false;
                 }
@@ -52,28 +76,37 @@ namespace IVMusic
             }
         }
 
-        
 
-        private void InitSound(string path)
+
+        private void InitSound()
         {
-            reader = new Mp3FileReader(path);
             wave = new WaveOut();
             wave.Init(reader);
         }
 
         public void Play()
         {
-            if (wave != null && wave.PlaybackState == PlaybackState.Stopped)
+            if (wave == null)
             {
-                InitSound(Path);
+                InitSound();
+            }
+            if (wave.PlaybackState == PlaybackState.Stopped)
+            {
                 wave.Play();
             }
         }
 
         public void Stop()
         {
-            if (wave != null && wave.PlaybackState == PlaybackState.Playing)
+            if (wave.PlaybackState == PlaybackState.Playing)
                 wave.Stop();
+        }
+
+        public void Reset()
+        {
+            reader.CurrentTime = new TimeSpan(0);
+            wave.Dispose();
+            wave = null;
         }
     }
 }

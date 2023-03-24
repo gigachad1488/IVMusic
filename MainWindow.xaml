@@ -5,11 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IVMusic"
         mc:Ignorable="d"
-        Title="MainWindow" Height="601" Width="1218">
+        Title="MainWindow" Height="618" Width="1234">
     <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="{TemplateBinding Background}"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="RoundButton" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="LightBlue"/>
-            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -22,7 +32,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="0,0,0,-6">
 
         <Grid x:Name="botwrappanel" Margin="0,463,0,0" Background="#FF984343" VerticalAlignment="Top" HorizontalAlignment="Center" Height="122" Width="1222">
             <Button x:Name="stopbutton" Style="{StaticResource RoundButton}" Content="🛑"  Margin="874,33,282,35" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Foreground="#FF14252B" Click="stopbutton_Click" FontWeight="Thin" >
@@ -33,24 +43,24 @@
                     <SolidColorBrush Color="#FF23142B" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="nextbutton" Style="{StaticResource RoundButton}" Content="&gt;" Foreground="#FF14252B" Margin="954,30,208,32" Height="60" Width="60" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" >
+            <Button x:Name="nextbutton" Style="{StaticResource RoundButton}" Content="&gt;" Foreground="#FF14252B" Margin="954,30,208,32" Height="60" Width="60" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Click="nextbutton_Click" >
                 <Button.Background>
                     <SolidColorBrush Color="#FF14252B" Opacity="0.01"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="prevbutton" Style="{StaticResource RoundButton}" Content="&lt;"  Foreground="#FF14252B" Margin="791,30,371,32" Height="60" Width="60" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave">
+            <Button x:Name="prevbutton" Style="{StaticResource RoundButton}" Content="&lt;"  Foreground="#FF14252B" Margin="791,30,371,32" Height="60" Width="60" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Click="prevbutton_Click">
                 <Button.Background>
                     <SolidColorBrush Color="#FF14252B" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="mixbutton" Style="{StaticResource RoundButton}" Content=""  Margin="1035,67,123,25" Height="30" Width="64" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" BorderBrush="#FFA58080">
+            <Button x:Name="mixbutton" Style="{StaticResource RoundButton}" Content="⇄" Foreground="#FF14252B" Margin="1035,50,123,20" Width="64" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" BorderBrush="#FFA58080">
                 <Button.Background>
-                    <ImageBrush ImageSource="/cycle.jpg"/>
+                    <SolidColorBrush Color="LightBlue" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="cyclebutton" Style="{StaticResource RoundButton}" Content=""  Margin="1104,67,52,25" Height="30" Width="66" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" >
+            <Button x:Name="cyclebutton" Style="{StaticResource RoundButton}" Content="⟲" Foreground="#FF14252B" Margin="1104,50,56,20" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" >
                 <Button.Background>
-                    <ImageBrush ImageSource="/mix.png"/>
+                    <SolidColorBrush Color="Black" Opacity="0"/>
                 </Button.Background>
             </Button>
             <Button x:Name="menubutton" Style="{StaticResource RoundButton}" Content="..."  Margin="1168,23,1,38" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Foreground="#FF14252B" >
@@ -61,24 +71,23 @@
                     <SolidColorBrush Color="#FF14252B" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Slider x:Name="volumeslider" HorizontalAlignment="Left" Margin="1036,28,0,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged" Maximum="1" TickFrequency="0.005" SmallChange="0.005"/>
-            <Slider HorizontalAlignment="Left" Margin="35,21,0,0" VerticalAlignment="Top" Width="740" Height="36"/>
-            <TextBox HorizontalAlignment="Left" IsReadOnly="True" Margin="35,61,0,34" TextWrapping="Wrap" Text="TextBox" Background= "#FF984343"  Width="730" Height="27" Foreground="White">
+            <Slider x:Name="volumeslider" HorizontalAlignment="Left" Margin="1035,17,0,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged" Maximum="1" TickFrequency="0.005" SmallChange="0.005"/>
+            <Slider x:Name="timeslider" HorizontalAlignment="Left" Margin="35,21,0,0" VerticalAlignment="Top" Width="740" Height="18" MouseDown="timeslider_MouseDown" Interval="1" MouseDoubleClick="timeslider_MouseDoubleClick" MouseLeftButtonUp="timeslider_MouseLeftButtonUp" MouseLeftButtonDown="timeslider_MouseLeftButtonDown" ValueChanged="timeslider_ValueChanged" ManipulationStarted="timeslider_ManipulationStarted" DragEnter="timeslider_DragEnter" MouseMove="timeslider_MouseMove"/>
+            <TextBox x:Name="soundnametextbox" HorizontalAlignment="Left" IsReadOnly="True" Margin="35,61,0,10" TextWrapping="Wrap" Text="TextBox" Background= "#FF984343"  Width="730" Foreground="White" FontSize="36">
                 <TextBox.BorderBrush>
                     <SolidColorBrush Color="#FFABADB3" Opacity="0"/>
                 </TextBox.BorderBrush>
             </TextBox>
-            <Label Content="Label" HorizontalAlignment="Left" Margin="780,19,0,0" VerticalAlignment="Top"/>
-            <Label x:Name="l6" Content="Label" HorizontalAlignment="Left" Margin="594,0,0,0" VerticalAlignment="Center"/>
+            <Label x:Name="durlabel" Content="Label" HorizontalAlignment="Left" Margin="780,19,0,0" VerticalAlignment="Top"/>
         </Grid>
         <Grid x:Name="mainwrappanel" Margin="279,0,0,0" VerticalAlignment="Top" Height="463">
-            <MediaElement Source="d:\users\student\Downloads\a4.avi" Stretch="Fill">
+            <MediaElement Source="C:\Users\iluha\Downloads\a4.avi" Stretch="Fill">
 
             </MediaElement>
-            <TextBox x:Name="searchtextbox" HorizontalAlignment="Left" Margin="22,10,0,0" TextWrapping="Wrap" Text="Поиск" VerticalAlignment="Top" Width="146" Height="36" Background="#FFCE9393"/>
-            <Image x:Name="picturepanel" Margin="22,64,757,264"/>
-            <TextBox x:Name="playlistnametextbox" IsReadOnly="True" HorizontalAlignment="Left" Margin="187,160,0,0" TextWrapping="Wrap" Text="название" VerticalAlignment="Top" Width="339" Height="39"/>
-            <ListView x:Name="listview" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,232,0,0">
+            <TextBox x:Name="searchtextbox" HorizontalAlignment="Left" Margin="22,10,0,0" TextWrapping="Wrap" Text="Поиск" VerticalAlignment="Top" Width="146" Height="20" Background="#FFCE9393"/>
+            <Image x:Name="picturepanel" Margin="23,39,700,244" Stretch="Fill"/>
+            <TextBox x:Name="playlistnametextbox" IsReadOnly="True" HorizontalAlignment="Left" Margin="280,158,0,0" TextWrapping="Wrap" Text="название" VerticalAlignment="Top" Width="339" Height="40" FontSize="22"/>
+            <ListView x:Name="listview" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,232,0,0" MouseDoubleClick="listview_MouseDoubleClick">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="название" DisplayMemberBinding="{Binding name}"/>
@@ -95,13 +104,12 @@
                     <GradientStop Color="#FF7CDAB1" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
-            <Button x:Name="browsebutton" Style="{StaticResource RoundButton}" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="130" Height="50" Margin="10,10,0,0" Click="browsebutton_Click" Focusable="False">
+            <Button x:Name="browsebutton" Style="{StaticResource RoundButton}" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="130" Height="50" Margin="10,10,0,0" Click="browsebutton_Click" Focusable="False" MouseEnter="browsebutton_MouseEnter" MouseLeave="browsebutton_MouseLeave">
                 <Button.Background>
-                    <SolidColorBrush Color="#FFDDDDDD" Opacity="1"/>
+                    <SolidColorBrush Opacity="1" Color="#FFD0C3C3"/>
                 </Button.Background>
             </Button>
             <ListBox x:Name="playlistslistbox" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,82,30,0" MouseDoubleClick="playlistslistbox_MouseDoubleClick"/>
-            <Button x:Name="h" Content="Button" HorizontalAlignment="Left" Margin="191,30,0,0" VerticalAlignment="Top" Click="h_Click" Focusable="False"/>
             <WrapPanel x:Name="panell" Margin="140,339,0,0"/>
         </Grid>
 

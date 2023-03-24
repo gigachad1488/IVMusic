@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IVMusic
 {
@@ -24,11 +25,15 @@ namespace IVMusic
     /// </summary>
     public partial class MainWindow : Window
     {
+        PlayList curplaylist = new PlayList();
         Sound cursound = new Sound();
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
+            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Tick += timer_Tick;
+            volumeslider.Value = 1;
 
         }
 
@@ -71,14 +76,13 @@ namespace IVMusic
             {
                 playlist.Title = new DirectoryInfo(dialog.SelectedPath).Name;
                 filepaths = Directory.GetFiles(dialog.SelectedPath, "*.mp3").ToList();
-                Image im = new Image();
+                System.Windows.Controls.Image im = new System.Windows.Controls.Image();
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
-                string[] impath = Directory.GetFiles(dialog.SelectedPath, "*.png");
-                System.Windows.MessageBox.Show(impath[0]);
+                string[] impath = Directory.GetFiles(dialog.SelectedPath, "*.png");               
                 image.UriSource = new Uri(impath[0], UriKind.Absolute);
                 image.EndInit();
-                playlist.image = im;
+                playlist.image = image;
                 foreach (var i in filepaths)
                 { 
                     playlist.AddSound(new Sound(i));
@@ -89,7 +93,6 @@ namespace IVMusic
                 return;
             }
             AllPlayLists.AddPlayList(playlist);
-            cursound = playlist.GetSound(0);
             ResetPlayLists();
         }
 
@@ -113,13 +116,13 @@ namespace IVMusic
         private void UploadPlayList(int i)
         {
             listview.Items.Clear();
-            PlayList list = AllPlayLists.GetPlayList(i);
-            playlistnametextbox.Text = list.Title;
-            picturepanel.Source = list.image;
-            for (int j = 0; j < list.Count; j++)
+            curplaylist = AllPlayLists.GetPlayList(i);
+            playlistnametextbox.Text = curplaylist.Title;
+            picturepanel.Source = curplaylist.image;
+            for (int j = 0; j < curplaylist.Count; j++)
             {
-                Sound sound = list.GetSound(j);
-                listview.Items.Add(new MyItem {dur = 50, name = sound.Name});
+                Sound sound = curplaylist.GetSound(j);
+                listview.Items.Add(new MyItem {dur = sound.Duration, name = sound.Name});
             }
             
             
@@ -133,6 +136,117 @@ namespace IVMusic
         {
             System.Windows.MessageBox.Show("робит");
         }
+
+        private void listview_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            UploadSound(listview.SelectedIndex);
+        }
+        bool first = true;
+        public void UploadSound(int i)
+        {
+            if (!first)
+            {
+                cursound.Reset();
+            }
+            else
+            {
+                first = false;
+            }          
+            cursound = curplaylist.GetSound(listview.SelectedIndex);
+            timeslider.Value = 0;
+            timeslider.Minimum = 0;
+            timeslider.Maximum = cursound.Duration.TotalSeconds;
+            durlabel.Content = cursound.Duration.TotalSeconds.ToString();
+            stopbutton.Content = "▶";
+            soundnametextbox.Text = cursound.Name;
+            cursound.Play();
+            timer.Start();
+        }
+
+        public void timer_Tick(object sender, EventArgs e)
+        {
+            timeslider.Value = cursound.Time.Seconds;
+        }
+
+        private void browsebutton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            browsebutton.Background = Brushes.GreenYellow;
+        }
+
+        private void browsebutton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            browsebutton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString($"#FFD0C3C3"));
+        }
+
+        private void nextbutton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = listview.SelectedIndex;
+            i++;
+            if (i >= listview.Items.Count)
+            {
+                i = 0;
+            }
+            listview.SelectedIndex = i;
+            UploadSound(listview.SelectedIndex);
+        }
+
+        private void prevbutton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = listview.SelectedIndex;
+            i--;
+            if (i <= 0)
+            {
+                i = listview.Items.Count;
+            }
+            listview.SelectedIndex = i;
+            UploadSound(listview.SelectedIndex);
+        }
+        private void timeslider_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void timeslider_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private void timeslider_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private void timeslider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void timeslider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void timeslider_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
+        {
+        }
+
+        private void timeslider_DragEnter(object sender, System.Windows.DragEventArgs e)
+        {
+ 
+        }
+
+        private void timeslider_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                cursound.Time = TimeSpan.FromSeconds(timeslider.Value);
+                timer.Start();
+                
+            }
+            else if (e.LeftButton == MouseButtonState.Released)
+            {
+                timer.Stop();
+            }
+            
+        }
     }
 }
 
@@ -140,5 +254,5 @@ public class MyItem
 {   
     public string name { get; set; }
 
-    public int dur { get; set; }
+    public TimeSpan dur { get; set; }
 }
