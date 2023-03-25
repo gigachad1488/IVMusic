@@ -19,7 +19,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace IVMusic
 {
-    
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -31,7 +31,7 @@ namespace IVMusic
         public MainWindow()
         {
             InitializeComponent();
-            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += timer_Tick;
             volumeslider.Value = 1;
 
@@ -50,7 +50,7 @@ namespace IVMusic
             string hex = "#FF14252B";
             Color color = (Color)ColorConverter.ConvertFromString(hex);
             b.Foreground = new SolidColorBrush(color);
-            
+
         }
 
         private void stopbutton_Click(object sender, RoutedEventArgs e)
@@ -68,6 +68,11 @@ namespace IVMusic
 
         private void browsebutton_Click(object sender, RoutedEventArgs e)
         {
+            AddBrowsePlayList();
+        }
+
+        public async void AddBrowsePlayList()
+        {
             PlayList playlist = new PlayList();
             List<Sound> l = new List<Sound>();
             List<string> filepaths = new List<string>();
@@ -75,25 +80,42 @@ namespace IVMusic
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 playlist.Title = new DirectoryInfo(dialog.SelectedPath).Name;
-                filepaths = Directory.GetFiles(dialog.SelectedPath, "*.mp3").ToList();
-                System.Windows.Controls.Image im = new System.Windows.Controls.Image();
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                string[] impath = Directory.GetFiles(dialog.SelectedPath, "*.png");               
-                image.UriSource = new Uri(impath[0], UriKind.Absolute);
-                image.EndInit();
-                playlist.image = image;
-                foreach (var i in filepaths)
-                { 
-                    playlist.AddSound(new Sound(i));
+                if (AllPlayLists.IsUnique(playlist))
+                {
+                    await Task.Run(() =>
+                    {
+                        filepaths = Directory.GetFiles(dialog.SelectedPath, "*.mp3").ToList();
+                        if (filepaths.Count > 0)
+                        {
+                            foreach (var i in filepaths)
+                            {
+                                playlist.AddSound(new Sound(i));
+                            }
+                        }
+                    });
+                    string[] impath = Directory.GetFiles(dialog.SelectedPath, "*.png");
+                    if (impath.Length > 0)
+                    {
+                        System.Windows.Controls.Image im = new System.Windows.Controls.Image();
+                        BitmapImage image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = new Uri(impath[0], UriKind.Absolute);
+                        image.EndInit();
+                        playlist.image = image;
+                    }
+                    AllPlayLists.AddPlayList(playlist);
+                    ResetPlayLists();
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("плейлист с таким названием уже добавлен");
                 }
             }
             else
             {
                 return;
             }
-            AllPlayLists.AddPlayList(playlist);
-            ResetPlayLists();
+
         }
 
         public void ResetPlayLists()
@@ -119,16 +141,16 @@ namespace IVMusic
             curplaylist = AllPlayLists.GetPlayList(i);
             playlistnametextbox.Text = curplaylist.Title;
             picturepanel.Source = curplaylist.image;
+            countlabel.Content = $"треков: {curplaylist.Count}";
             for (int j = 0; j < curplaylist.Count; j++)
             {
                 Sound sound = curplaylist.GetSound(j);
-                listview.Items.Add(new MyItem {dur = sound.Duration, name = sound.Name});
+                listview.Items.Add(new MyItem { dur = sound.Duration, name = sound.Name });
             }
-            
-            
         }
         private void playlistslistbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            if (playlistslistbox.SelectedIndex >= 0)
             UploadPlayList(playlistslistbox.SelectedIndex);
         }
 
@@ -139,6 +161,7 @@ namespace IVMusic
 
         private void listview_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            if (listview.SelectedIndex >= 0)
             UploadSound(listview.SelectedIndex);
         }
         bool first = true;
@@ -151,21 +174,23 @@ namespace IVMusic
             else
             {
                 first = false;
-            }          
+            }
             cursound = curplaylist.GetSound(listview.SelectedIndex);
             timeslider.Value = 0;
             timeslider.Minimum = 0;
             timeslider.Maximum = cursound.Duration.TotalSeconds;
-            durlabel.Content = cursound.Duration.TotalSeconds.ToString();
+            durlabel.Content = cursound.Duration.ToString().Substring(3, 5);
             stopbutton.Content = "▶";
             soundnametextbox.Text = cursound.Name;
             cursound.Play();
+            cursound.Volume = (float)volumeslider.Value;
             timer.Start();
         }
 
         public void timer_Tick(object sender, EventArgs e)
         {
-            timeslider.Value = cursound.Time.Seconds;
+            timeslider.Value = cursound.Time.TotalSeconds;
+            timelabel.Content = cursound.Time.ToString().Substring(3, 5);
         }
 
         private void browsebutton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -180,78 +205,61 @@ namespace IVMusic
 
         private void nextbutton_Click(object sender, RoutedEventArgs e)
         {
-            int i = listview.SelectedIndex;
-            i++;
-            if (i >= listview.Items.Count)
+            if (cursound.IsInit)
             {
-                i = 0;
+                int i = listview.SelectedIndex;
+                i++;
+                if (i >= listview.Items.Count)
+                {
+                    i = 0;
+                }
+                listview.SelectedIndex = i;
+                UploadSound(listview.SelectedIndex);
             }
-            listview.SelectedIndex = i;
-            UploadSound(listview.SelectedIndex);
         }
 
         private void prevbutton_Click(object sender, RoutedEventArgs e)
         {
-            int i = listview.SelectedIndex;
-            i--;
-            if (i <= 0)
+            if (cursound.IsInit)
             {
-                i = listview.Items.Count;
+                int i = listview.SelectedIndex;
+                if (i <= 0)
+                {
+                    i = listview.Items.Count;
+                }
+                listview.SelectedIndex = i - 1;
+                UploadSound(listview.SelectedIndex);
             }
-            listview.SelectedIndex = i;
-            UploadSound(listview.SelectedIndex);
-        }
-        private void timeslider_MouseDown(object sender, MouseButtonEventArgs e)
-        {
         }
 
-        private void timeslider_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void timeslider_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
         {
-            
+            if (cursound.IsInit)
+            cursound.Time = TimeSpan.FromSeconds(timeslider.Value);
         }
 
-        private void timeslider_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
-        private void timeslider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-        }
-
-        private void timeslider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void soundnametextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
 
-        private void timeslider_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
+        private void menubutton_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void timeslider_DragEnter(object sender, System.Windows.DragEventArgs e)
-        {
- 
-        }
-
-        private void timeslider_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (cursound.IsInit)
             {
-                cursound.Time = TimeSpan.FromSeconds(timeslider.Value);
-                timer.Start();
-                
+                System.Windows.MessageBox.Show(cursound.Path);
             }
-            else if (e.LeftButton == MouseButtonState.Released)
-            {
-                timer.Stop();
-            }
-            
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            menucombobox.SelectedIndex = -1;
         }
     }
 }
 
 public class MyItem
-{   
+{
     public string name { get; set; }
 
     public TimeSpan dur { get; set; }

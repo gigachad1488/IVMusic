@@ -11,7 +11,7 @@ namespace IVMusic
     class Sound
     {
         public string Name { get; set; }
-        private string Path { get; set; }
+        public string Path { get; private set; }
 
         public TimeSpan Duration { get; set; }
 

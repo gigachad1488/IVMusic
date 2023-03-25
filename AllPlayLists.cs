@@ -9,7 +9,6 @@ namespace IVMusic
     static class AllPlayLists
     {
         private static List<PlayList> playlists = new List<PlayList>();
-
         public static int Count
         {
             get
@@ -26,6 +25,16 @@ namespace IVMusic
         public static void AddPlayList(PlayList playlist) 
         {
             playlists.Add(playlist);
+        }
+
+        public static bool IsUnique(PlayList playlist) 
+        {
+            foreach (var item in playlists) 
+            {
+                if (playlist.Title == item.Title)
+                    return false;
+            }
+            return true;
         }
     }
 }
