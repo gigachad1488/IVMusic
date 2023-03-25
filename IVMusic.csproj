@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
@@ -152,7 +153,10 @@
     <Resource Include="micon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="7744d35a724b4faa424b422efa6016be_w200.gif" />
+    <Resource Include="ph.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pg.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

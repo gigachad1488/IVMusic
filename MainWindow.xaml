@@ -99,7 +99,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <MediaElement Source="/7744d35a724b4faa424b422efa6016be_w200.gif" Stretch="Fill"/>
+            <MediaElement x:Name="melement" Stretch="Fill" UnloadedBehavior="Play" Source="ph.gif"/>
             <Image x:Name="picturepanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,15,0,0" Width="300" Height="200" Stretch="Fill"/>
             <TextBox x:Name="playlistnametextbox" IsReadOnly="True" Focusable="False" Cursor="Arrow" BorderThickness="0" Margin="329,120,107,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="89" FontSize="48">
                 <TextBox.SelectionTextBrush>
