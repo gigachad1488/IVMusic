@@ -151,5 +151,8 @@
   <ItemGroup>
     <Resource Include="micon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="7744d35a724b4faa424b422efa6016be_w200.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

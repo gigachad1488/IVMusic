@@ -28,9 +28,14 @@ namespace IVMusic
         PlayList curplaylist = new PlayList();
         Sound cursound = new Sound();
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+        bool IsLooping;
+        bool IsMixing;
         public MainWindow()
         {
             InitializeComponent();
+            IsLooping = true;
+            cyclebutton.Background.Opacity = 60;
+            IsMixing = false;
             timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += timer_Tick;
             volumeslider.Value = 1;
@@ -55,6 +60,11 @@ namespace IVMusic
 
         private void stopbutton_Click(object sender, RoutedEventArgs e)
         {
+            StopSound();
+        }
+
+        public void StopSound()
+        {
             string text = stopbutton.Content.ToString();
             stopbutton.Content = text == "▶" ? "🛑" : "▶";
             if (cursound.IsInit && cursound != null)
@@ -62,8 +72,14 @@ namespace IVMusic
                 if (text == "▶")
                     cursound.Stop();
                 else
-                    cursound.Play();
+                {
+                    if (!IsLooping && cursound.Time == cursound.Duration)
+                        PlaySoundFromStart();
+                    else
+                        cursound.Play();
+                }
             }
+            
         }
 
         private void browsebutton_Click(object sender, RoutedEventArgs e)
@@ -182,8 +198,14 @@ namespace IVMusic
             durlabel.Content = cursound.Duration.ToString().Substring(3, 5);
             stopbutton.Content = "▶";
             soundnametextbox.Text = cursound.Name;
-            cursound.Play();
+            PlaySoundFromStart();
             cursound.Volume = (float)volumeslider.Value;
+        }
+
+        public void PlaySoundFromStart()
+        {
+            cursound.Time = new TimeSpan(0);
+            cursound.Play();
             timer.Start();
         }
 
@@ -191,6 +213,17 @@ namespace IVMusic
         {
             timeslider.Value = cursound.Time.TotalSeconds;
             timelabel.Content = cursound.Time.ToString().Substring(3, 5);
+            if (cursound.Time == cursound.Duration)
+            {
+                if (IsLooping)
+                {
+                    cursound.Time = new TimeSpan(0);
+                }
+                else
+                {
+                    NextSound();
+                }
+            }
         }
 
         private void browsebutton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -205,15 +238,28 @@ namespace IVMusic
 
         private void nextbutton_Click(object sender, RoutedEventArgs e)
         {
+            NextSound();
+        }
+
+        public void NextSound()
+        {
             if (cursound.IsInit)
             {
-                int i = listview.SelectedIndex;
-                i++;
-                if (i >= listview.Items.Count)
+                if (IsMixing)
                 {
-                    i = 0;
+                    Random rand = new Random();
+                    listview.SelectedIndex = rand.Next(0, listview.Items.Count - 1);
                 }
-                listview.SelectedIndex = i;
+                else
+                {
+                    int i = listview.SelectedIndex;
+                    i++;
+                    if (i >= listview.Items.Count)
+                    {
+                        i = 0;
+                    }
+                    listview.SelectedIndex = i;
+                }
                 UploadSound(listview.SelectedIndex);
             }
         }
@@ -222,12 +268,20 @@ namespace IVMusic
         {
             if (cursound.IsInit)
             {
-                int i = listview.SelectedIndex;
-                if (i <= 0)
+                if (IsMixing)
                 {
-                    i = listview.Items.Count;
+                    Random rand = new Random();
+                    listview.SelectedIndex = rand.Next(0, listview.Items.Count - 1);
                 }
-                listview.SelectedIndex = i - 1;
+                else
+                {
+                    int i = listview.SelectedIndex;
+                    if (i <= 0)
+                    {
+                        i = listview.Items.Count;
+                    }
+                    listview.SelectedIndex = i - 1;
+                }               
                 UploadSound(listview.SelectedIndex);
             }
         }
@@ -245,13 +299,63 @@ namespace IVMusic
 
         private void menubutton_Click(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+
+        private void cyclebutton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsLooping)
+            {
+                IsLooping = false;
+                cyclebutton.Background.Opacity = 0;
+            }
+            else
+            {
+                IsLooping = true;
+                cyclebutton.Background.Opacity = 60;
+            }
+        }
+
+        private void mixbutton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsMixing)
+            {
+                IsMixing = false;
+                mixbutton.Background.Opacity = 0;
+            }
+            else
+            {
+                IsMixing = true;
+                mixbutton.Background.Opacity = 60;
+            }
+        }
+
+        private void menucombobox_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            System.Windows.Controls.ComboBox b = sender as System.Windows.Controls.ComboBox;
+            b.Foreground = Brushes.Aquamarine;
+        }
+
+        private void menucombobox_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            System.Windows.Controls.ComboBox b = sender as System.Windows.Controls.ComboBox;
+            string hex = "#FF14252B";
+            Color color = (Color)ColorConverter.ConvertFromString(hex);
+            b.Foreground = new SolidColorBrush(color);
+        }
+
+        private void pathbutton_Click(object sender, RoutedEventArgs e)
+        {
             if (cursound.IsInit)
             {
                 System.Windows.MessageBox.Show(cursound.Path);
             }
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void menucombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             menucombobox.SelectedIndex = -1;
         }

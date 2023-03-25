@@ -68,14 +68,14 @@
                     <SolidColorBrush Color="#FF14252B" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="mixbutton" Style="{StaticResource RoundButton}" Content="⇄" Foreground="#FF14252B" Margin="0,0,175,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="50" FontSize="40" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave">
+            <Button x:Name="mixbutton" Style="{StaticResource RoundButton}" Content="⇄" Foreground="#FF14252B" Margin="0,0,175,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="50" FontSize="40" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Click="mixbutton_Click">
                 <Button.Background>
-                    <SolidColorBrush Color="LightBlue" Opacity="0"/>
+                    <SolidColorBrush Color="#FF76921D" Opacity="0"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="cyclebutton" Style="{StaticResource RoundButton}" Content="⟲" Foreground="#FF14252B" Margin="0,0,100,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="50" FontSize="40" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" >
+            <Button x:Name="cyclebutton" Style="{StaticResource RoundButton}" Content="⟲" BorderThickness="4" Foreground="#FF14252B" Margin="0,0,100,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="50" FontSize="40" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Click="cyclebutton_Click" BorderBrush="#FFB14747" >
                 <Button.Background>
-                    <SolidColorBrush Color="Black" Opacity="0"/>
+                    <SolidColorBrush Color="#FF76921D" Opacity="0"/>
                 </Button.Background>
             </Button>
             <Slider x:Name="volumeslider" HorizontalAlignment="Right" Margin="0,13,90,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged" Maximum="1" TickFrequency="0.005" SmallChange="0.005"/>
@@ -91,18 +91,15 @@
                 </ScrollBar.Background>
             </ScrollBar>
             <Label x:Name="timelabel" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#FFFDFDFD" FontSize="20"/>
-            <ComboBox x:Name="menucombobox"  HorizontalAlignment="Right" Text="fas" Margin="0,0,20,0" VerticalAlignment="Center" Width="62" Height="52" Background="#FF348BA9" Foreground="#FF843434">
-                <ComboBox.BorderBrush>
-                    <SolidColorBrush Color="#FFACACAC" Opacity="0"/>
-                </ComboBox.BorderBrush>
-                <Button BorderThickness="0" Background="Red" x:Name="pathbutton" Content="Расположение файла" Style="{StaticResource RoundButton}" Click="menubutton_Click"/>
+            <ComboBox x:Name="menucombobox" Width="60" Height="60" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Text="..." Foreground="#FF964B4B" Margin="0,28,15,0" SelectionChanged="menucombobox_SelectionChanged">
+                <Button x:Name="pathbutton" Content="показать расположение звука" Click="pathbutton_Click"/>
             </ComboBox>
         </Grid>
         <Grid x:Name="mainwrappanel" Margin="279,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Height="463">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <MediaElement Source="C:\Users\iluha\Downloads\a4.avi" Stretch="Fill"/>
+            <MediaElement Source="/7744d35a724b4faa424b422efa6016be_w200.gif" Stretch="Fill"/>
             <Image x:Name="picturepanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,15,0,0" Width="300" Height="200" Stretch="Fill"/>
             <TextBox x:Name="playlistnametextbox" IsReadOnly="True" Focusable="False" Cursor="Arrow" BorderThickness="0" Margin="329,120,107,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="89" FontSize="48">
                 <TextBox.SelectionTextBrush>
