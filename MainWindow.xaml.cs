@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.IO;
 using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Media.Animation;
 
 namespace IVMusic
 {
@@ -33,6 +34,8 @@ namespace IVMusic
         public MainWindow()
         {
             InitializeComponent();
+            Storyboard board = FindResource("GradientAnimation") as Storyboard;
+            board.Begin();
             IsLooping = true;
             cyclebutton.Background.Opacity = 60;
             IsMixing = false;
@@ -79,7 +82,6 @@ namespace IVMusic
                         cursound.Play();
                 }
             }
-            
         }
 
         private void browsebutton_Click(object sender, RoutedEventArgs e)
@@ -109,6 +111,11 @@ namespace IVMusic
                             }
                         }
                     });
+                    if (filepaths.Count <= 0)
+                    {
+                        System.Windows.MessageBox.Show("в папке отсутствуют звуковые файлы формата mp3");
+                        return;
+                    }
                     string[] impath = Directory.GetFiles(dialog.SelectedPath, "*.png");
                     if (impath.Length > 0)
                     {
@@ -167,7 +174,7 @@ namespace IVMusic
         private void playlistslistbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (playlistslistbox.SelectedIndex >= 0)
-            UploadPlayList(playlistslistbox.SelectedIndex);
+                UploadPlayList(playlistslistbox.SelectedIndex);
         }
 
         private void h_Click(object sender, RoutedEventArgs e)
@@ -178,7 +185,7 @@ namespace IVMusic
         private void listview_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (listview.SelectedIndex >= 0)
-            UploadSound(listview.SelectedIndex);
+                UploadSound(listview.SelectedIndex);
         }
         bool first = true;
         public void UploadSound(int i)
@@ -281,7 +288,7 @@ namespace IVMusic
                         i = listview.Items.Count;
                     }
                     listview.SelectedIndex = i - 1;
-                }               
+                }
                 UploadSound(listview.SelectedIndex);
             }
         }
@@ -289,7 +296,7 @@ namespace IVMusic
         private void timeslider_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
         {
             if (cursound.IsInit)
-            cursound.Time = TimeSpan.FromSeconds(timeslider.Value);
+                cursound.Time = TimeSpan.FromSeconds(timeslider.Value);
         }
 
         private void soundnametextbox_TextChanged(object sender, TextChangedEventArgs e)
