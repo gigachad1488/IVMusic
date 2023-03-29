@@ -7,12 +7,17 @@
         mc:Ignorable="d"
         Title="IVMusic" ResizeMode="NoResize" Height="618" Width="1234" Icon="/micon.png">
     <Window.Resources>
-        <Storyboard x:Key="GradientAnimation" RepeatBehavior="Forever" DecelerationRatio="0.1">
+        <Storyboard x:Key="GradientAnimation" RepeatBehavior="Forever" DecelerationRatio="0.5">
             <ColorAnimation
             Storyboard.TargetName="melement"
             Storyboard.TargetProperty="(Grid.Background).(LinearGradientBrush.GradientStops)[0].Color"
             From="Purple" To="Aquamarine" Duration="0:0:4" AutoReverse="True"/>
-            
+        </Storyboard>
+        <Storyboard x:Key="GradientAnimation2" RepeatBehavior="Forever" DecelerationRatio="0.5">
+            <ColorAnimation
+            Storyboard.TargetName="browsegrid"
+            Storyboard.TargetProperty="(Grid.Background).(LinearGradientBrush.GradientStops)[0].Color"
+            From="Purple" To="Aquamarine" Duration="0:0:4" AutoReverse="True"/>
         </Storyboard>
         <ControlTemplate x:Key="zoomanimation" TargetType="Button">
             <ControlTemplate.Triggers>
@@ -74,7 +79,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="botwrappanel" Margin="0,0,0,0" Background="#FF984343" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="122" Width="1234">
+        <Grid x:Name="botwrappanel" Margin="0,0,0,0" Background="#FF761EA0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="122" Width="1234">
             <Button x:Name="stopbutton" Style="{StaticResource RoundButton}" Content="🛑" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="858,0,0,0" FontSize="48" FontFamily="Bahnschrift" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Foreground="#FF14252B" Click="stopbutton_Click" FontWeight="Thin" Height="66" Width="71" >
                 <Button.BorderBrush>
                     <SolidColorBrush Color="#FF707070" Opacity="0"/>
@@ -104,7 +109,7 @@
                 </Button.Background>
             </Button>
             <Slider x:Name="volumeslider" HorizontalAlignment="Right" Margin="0,13,90,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged" Maximum="1" TickFrequency="0.005" SmallChange="0.005"/>
-            <TextBox x:Name="soundnametextbox" BorderThickness="0" Cursor="Arrow" TextAlignment="Center" Focusable="False" IsReadOnly="True" Margin="90,0,0,0" TextWrapping="Wrap" Text="" Background= "#FF984343"  Width="616"  Foreground="White" FontSize="24" TextChanged="soundnametextbox_TextChanged" Height="68" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <TextBox x:Name="soundnametextbox" BorderThickness="0" Cursor="Arrow" TextAlignment="Center" Focusable="False" IsReadOnly="True" Margin="90,0,0,0" TextWrapping="Wrap" Text="" Background= "#FF761EA0"  Width="616"  Foreground="White" FontSize="24" TextChanged="soundnametextbox_TextChanged" Height="68" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             </TextBox>
             <Label x:Name="durlabel" Content="" HorizontalAlignment="Center"  Margin="310,4,0,0" VerticalAlignment="Top" Foreground="White" FontSize="20"/>
             <ScrollBar x:Name="timeslider" Margin="10,9,0,83" Width="730" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Scroll="timeslider_Scroll" SmallChange="1">
@@ -116,11 +121,12 @@
                 </ScrollBar.Background>
             </ScrollBar>
             <Label x:Name="timelabel" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#FFFDFDFD" FontSize="20"/>
-            <ComboBox x:Name="menucombobox" Width="36" Height="34" Background="Green" VerticalAlignment="Center" HorizontalAlignment="Right" Text="..." Foreground="#FFA04141" Margin="0,0,30,0" SelectionChanged="menucombobox_SelectionChanged">
-                <ComboBoxItem Content="324234"/>
-                <Button x:Name="pathbutton" Content="показать расположение звука" Click="pathbutton_Click"/>
-            </ComboBox>
-            <Label Content="repack by iluhich" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,0"/>
+            <Label Content="repack by iluhich&#10;designed by victor" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,0" Height="42"/>
+            <Button x:Name="menubutton" Style="{StaticResource RoundButton}" FontSize="30" Foreground="#FF14252B" Content="?" Width="40" Height="40" Click="pathbutton_Click" HorizontalAlignment="Right" MouseEnter="ButtonColorChangeEnter" MouseLeave="ButtonColorChangeLeave" Margin="0,0,30,0" VerticalAlignment="Center">
+                <Button.Background>
+                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                </Button.Background>
+            </Button>
         </Grid>
         <Grid x:Name="mainwrappanel" Margin="279,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Height="463">
             <Grid.ColumnDefinitions>
@@ -158,7 +164,7 @@
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </TextBox.Background>
             </TextBox>
-            <ListView x:Name="listview" HorizontalAlignment="Left" VerticalAlignment="Bottom" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,0,0,0" Height="230" MouseDoubleClick="listview_MouseDoubleClick">
+            <ListView x:Name="listview" HorizontalAlignment="Left" VerticalAlignment="Bottom" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,0,0,0" Height="230" MouseDoubleClick="listview_MouseDoubleClick" Background="#FF31053A" Foreground="White" BorderBrush="#FF30466F">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="название" Width="700" DisplayMemberBinding="{Binding name}"/>
@@ -176,19 +182,19 @@
             </Label>
             <Label x:Name="countlabel" Content="" HorizontalAlignment="Right" Margin="0,0,40,30" VerticalAlignment="Center" Foreground="#FFFFF5F5"/>
         </Grid>
-        <Grid x:Name="browsewrappanel" VerticalAlignment="Top" Height="463" HorizontalAlignment="Left" Width="279">
+        <Grid x:Name="browsegrid" VerticalAlignment="Top" Height="463" HorizontalAlignment="Left" Width="279">
             <Grid.Background>
-                <LinearGradientBrush EndPoint="1,0" StartPoint="1,0">
-                    <GradientStop Color="Black"/>
-                    <GradientStop Color="#FF7CDAB1" Offset="1"/>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Purple"/>
+                    <GradientStop Color="Aquamarine" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
-            <Button x:Name="browsebutton" Style="{StaticResource RoundButton}" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="130" Height="50" Margin="10,10,0,0" Click="browsebutton_Click" Focusable="False" MouseEnter="browsebutton_MouseEnter" MouseLeave="browsebutton_MouseLeave">
+            <Button x:Name="browsebutton" Style="{StaticResource RoundButton}" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="130" Height="50" Margin="10,10,0,0" Click="browsebutton_Click" Focusable="False" MouseEnter="browsebutton_MouseEnter" MouseLeave="browsebutton_MouseLeave" Foreground="White">
                 <Button.Background>
-                    <SolidColorBrush Opacity="1" Color="#FFD0C3C3"/>
+                    <SolidColorBrush Opacity="1" Color="#FF380650"/>
                 </Button.Background>
             </Button>
-            <ListBox x:Name="playlistslistbox" d:ItemsSource="{d:SampleData ItemCount=5}" Width="250" Height="380" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,0" MouseDoubleClick="playlistslistbox_MouseDoubleClick"/>
+            <ListBox x:Name="playlistslistbox" d:ItemsSource="{d:SampleData ItemCount=5}" Width="250" Height="380" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,0" MouseDoubleClick="playlistslistbox_MouseDoubleClick" Background="#FF31053A" Foreground="White"/>
         </Grid>
 
     </Grid>

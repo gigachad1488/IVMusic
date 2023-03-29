@@ -36,10 +36,12 @@ namespace IVMusic
             InitializeComponent();
             Storyboard board = FindResource("GradientAnimation") as Storyboard;
             board.Begin();
+            Storyboard board2 = FindResource("GradientAnimation2") as Storyboard;
+            board2.Begin();
             IsLooping = true;
             cyclebutton.Background.Opacity = 60;
             IsMixing = false;
-            timer.Interval = TimeSpan.FromMilliseconds(200);
+            timer.Interval = TimeSpan.FromMilliseconds(1000);
             timer.Tick += timer_Tick;
             volumeslider.Value = 1;
 
@@ -222,7 +224,7 @@ namespace IVMusic
             timelabel.Content = cursound.Time.ToString().Substring(3, 5);
             if (cursound.Time == cursound.Duration)
             {
-                if (IsLooping)
+               if (IsLooping)
                 {
                     cursound.Time = new TimeSpan(0);
                 }
@@ -230,7 +232,7 @@ namespace IVMusic
                 {
                     NextSound();
                 }
-            }
+           }
         }
 
         private void browsebutton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -240,7 +242,7 @@ namespace IVMusic
 
         private void browsebutton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            browsebutton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString($"#FFD0C3C3"));
+            browsebutton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString($"#FF380650"));
         }
 
         private void nextbutton_Click(object sender, RoutedEventArgs e)
@@ -299,19 +301,6 @@ namespace IVMusic
                 cursound.Time = TimeSpan.FromSeconds(timeslider.Value);
         }
 
-        private void soundnametextbox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void menubutton_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
-
         private void cyclebutton_Click(object sender, RoutedEventArgs e)
         {
             if (IsLooping)
@@ -358,13 +347,8 @@ namespace IVMusic
         {
             if (cursound.IsInit)
             {
-                System.Windows.MessageBox.Show(cursound.Path);
+                System.Windows.MessageBox.Show("Путь до файла: \r\n" + cursound.Path);
             }
-        }
-
-        private void menucombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            menucombobox.SelectedIndex = -1;
         }
     }
 }
