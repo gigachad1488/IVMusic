@@ -41,7 +41,7 @@ namespace IVMusic
             IsLooping = true;
             cyclebutton.Background.Opacity = 60;
             IsMixing = false;
-            timer.Interval = TimeSpan.FromMilliseconds(1000);
+            timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += timer_Tick;
             volumeslider.Value = 1;
 
@@ -169,7 +169,7 @@ namespace IVMusic
             for (int j = 0; j < curplaylist.Count; j++)
             {
                 Sound sound = curplaylist.GetSound(j);
-                listview.Items.Add(new MyItem { dur = sound.Duration, name = sound.Name });
+                listview.Items.Add(new MyItem { dur = sound.Duration.ToString().Substring(3, 5), name = sound.Name });
             }
         }
         private void playlistslistbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -356,5 +356,5 @@ public class MyItem
 {
     public string name { get; set; }
 
-    public TimeSpan dur { get; set; }
+    public string dur { get; set; }
 }

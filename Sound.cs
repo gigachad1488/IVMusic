@@ -80,8 +80,15 @@ namespace IVMusic
 
         private void InitSound()
         {
-            wave = new WaveOut();
-            wave.Init(reader);
+            try
+            {
+                wave = new WaveOut();
+                wave.Init(reader);
+            }
+            catch
+            {
+                MessageBox.Show($"не удалось инициировать файл {Name}.mp3\r\n({Path})\r\nвозможно он был удален либо не имеется доступ для запуска этого файла");
+            }
         }
 
         public void Play()
