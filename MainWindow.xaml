@@ -109,7 +109,7 @@
                 </Button.Background>
             </Button>
             <Slider x:Name="volumeslider" HorizontalAlignment="Right" Margin="0,13,90,0" VerticalAlignment="Top" Width="130" Height="22" ValueChanged="volumeslider_ValueChanged" Maximum="1" TickFrequency="0.005" SmallChange="0.005"/>
-            <TextBox x:Name="soundnametextbox" BorderThickness="0" Cursor="Arrow" TextAlignment="Center" Focusable="False" IsReadOnly="True" Margin="90,0,0,0" TextWrapping="Wrap" Text="" Background= "#FF761EA0"  Width="616"  Foreground="White" FontSize="24" TextChanged="soundnametextbox_TextChanged" Height="68" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <TextBox x:Name="soundnametextbox" BorderThickness="0" Cursor="Arrow" TextAlignment="Center" Focusable="False" IsReadOnly="True" Margin="90,0,0,5" TextWrapping="Wrap" Text="" Background= "#FF761EA0"  Width="616"  Foreground="White" FontSize="24" Height="68" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             </TextBox>
             <Label x:Name="durlabel" Content="" HorizontalAlignment="Center"  Margin="310,4,0,0" VerticalAlignment="Top" Foreground="White" FontSize="20"/>
             <ScrollBar x:Name="timeslider" Margin="10,9,0,83" Width="730" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Scroll="timeslider_Scroll" SmallChange="1">
