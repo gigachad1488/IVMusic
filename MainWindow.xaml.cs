@@ -60,7 +60,6 @@ namespace IVMusic
             string hex = "#FF14252B";
             Color color = (Color)ColorConverter.ConvertFromString(hex);
             b.Foreground = new SolidColorBrush(color);
-
         }
 
         private void stopbutton_Click(object sender, RoutedEventArgs e)
